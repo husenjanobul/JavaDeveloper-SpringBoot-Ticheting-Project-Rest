@@ -21,7 +21,7 @@ spring:
     show-sql: false
 security:
   jwt:
-    secret-key: cybertek
+    secret-key: company
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
