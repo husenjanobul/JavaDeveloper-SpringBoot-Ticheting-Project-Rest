@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     private String firstName;
     private String lastName;
     private String userName;
-    private String password;
+    private String passWord;
     private boolean enabled;
     private String phone;
 
@@ -31,6 +31,5 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
 
 }
