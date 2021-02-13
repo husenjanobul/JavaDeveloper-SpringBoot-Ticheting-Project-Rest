@@ -1,31 +1,58 @@
 package com.company.implementation;
 
+import com.company.dto.UserDTO;
 import com.company.entity.User;
 import com.company.entity.common.UserPrincipal;
+import com.company.mapper.MapperUtil;
 import com.company.repository.UserRepository;
 import com.company.service.SecurityService;
+import com.company.service.UserService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class SecurityServiceImpl implements SecurityService {
 
-    private UserRepository userRepository;
+    private UserService userService;
+    private MapperUtil mapperUtil;
 
-    public SecurityServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public SecurityServiceImpl(UserService userService, MapperUtil mapperUtil) {
+        this.userService = userService;
+        this.mapperUtil = mapperUtil;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUserName(s);
+        UserDTO user = userService.findByUserName(s);
 
         if(user==null){
             throw new UsernameNotFoundException("This user does not exists");
         }
 
-        return new UserPrincipal(user);
+        return new org.springframework.security.core.userdetails.User(user.getId().toString(),user.getPassword(),listAuthorities(user));
     }
+
+    @Override
+    public User loadUser(String param) {
+        UserDTO user = userService.findByUserName(param);
+        return mapperUtil.convert(user, new User());
+    }
+
+    private Collection<? extends GrantedAuthority> listAuthorities(UserDTO user){
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getDescription());
+        authorityList.add(authority);
+
+        return authorityList;
+    }
+
 }
