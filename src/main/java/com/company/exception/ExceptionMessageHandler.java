@@ -1,4 +1,4 @@
-package com.company.exceprtion;
+package com.company.exception;
 
 import com.company.dto.DefaultExceptionMessageDto;
 import com.company.entity.ResponseWrapper;

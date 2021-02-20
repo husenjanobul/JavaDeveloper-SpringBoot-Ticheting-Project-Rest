@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 @Component
 public class MapperUtil {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public MapperUtil(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
@@ -18,12 +18,12 @@ public class MapperUtil {
         return modelMapper.map(objectToBeConverted,(Type) convertedObject.getClass());
     }
 
-    public <T> T  convertToEntity(Object objectToBeConverted, T convertedObject){
-        return modelMapper.map(objectToBeConverted, (Type) convertedObject.getClass());
-    }
-
-    public <T> T convertToDTO(Object objectToBeConverted, T convertedObject){
-        return modelMapper.map(objectToBeConverted,(Type) convertedObject.getClass());
-    }
+//    public <T> T  convertToEntity(Object objectToBeConverted, T convertedObject){
+//        return modelMapper.map(objectToBeConverted, (Type) convertedObject.getClass());
+//    }
+//
+//    public <T> T convertToDTO(Object objectToBeConverted, T convertedObject){
+//        return modelMapper.map(objectToBeConverted,(Type) convertedObject.getClass());
+//    }
 
 }

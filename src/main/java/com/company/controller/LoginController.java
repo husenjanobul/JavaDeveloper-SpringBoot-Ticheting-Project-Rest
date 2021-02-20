@@ -1,24 +1,26 @@
 package com.company.controller;
 
 import com.company.annotation.DefaultExceptionMessage;
+import com.company.dto.MailDTO;
 import com.company.dto.UserDTO;
+import com.company.entity.ConfirmationToken;
 import com.company.entity.ResponseWrapper;
 import com.company.entity.User;
 import com.company.entity.common.AuthenticationRequest;
-import com.company.exceprtion.TicketingProjectException;
+import com.company.exception.TicketingProjectException;
 import com.company.mapper.MapperUtil;
+import com.company.service.ConfirmationTokenService;
 import com.company.service.UserService;
 import com.company.util.JWTUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "Authentication Controller",description = "Authenticate API")
@@ -28,12 +30,14 @@ public class LoginController {
 	private UserService userService;
 	private MapperUtil mapperUtil;
 	private JWTUtil jwtUtil;
+	private ConfirmationTokenService confirmationTokenService;
 
-	public LoginController(AuthenticationManager authenticationManager, UserService userService, MapperUtil mapperUtil, JWTUtil jwtUtil) {
+	public LoginController(AuthenticationManager authenticationManager, UserService userService, MapperUtil mapperUtil, JWTUtil jwtUtil, ConfirmationTokenService confirmationTokenService) {
 		this.authenticationManager = authenticationManager;
 		this.userService = userService;
 		this.mapperUtil = mapperUtil;
 		this.jwtUtil = jwtUtil;
+		this.confirmationTokenService = confirmationTokenService;
 	}
 
 	@PostMapping("/authenticate")
@@ -59,6 +63,27 @@ public class LoginController {
 		return ResponseEntity.ok(new ResponseWrapper("Login Successful",jwtToken));
 
 	}
+
+
+
+	@DefaultExceptionMessage(defaultMessage = "Failed to confirm email, please try again!")
+	@GetMapping("/confirmation")
+	@Operation(summary = "Confirm account")
+	public ResponseEntity<ResponseWrapper> confirmEmail(@RequestParam("token") String token) throws TicketingProjectException {
+
+		ConfirmationToken confirmationToken = confirmationTokenService.readByToken(token);
+		UserDTO confirmUser = userService.confirm(confirmationToken.getUser());
+		confirmationTokenService.delete(confirmationToken);
+
+		return ResponseEntity.ok(new ResponseWrapper("User has been confirmed!",confirmUser));
+
+	}
+
+
+
+
+
+
 
 
 }

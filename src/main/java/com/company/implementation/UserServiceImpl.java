@@ -4,7 +4,7 @@ import com.company.dto.ProjectDTO;
 import com.company.dto.TaskDTO;
 import com.company.dto.UserDTO;
 import com.company.entity.User;
-import com.company.exceprtion.TicketingProjectException;
+import com.company.exception.TicketingProjectException;
 import com.company.mapper.MapperUtil;
 import com.company.mapper.UserMapper;
 import com.company.repository.UserRepository;
@@ -51,20 +51,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDTO dto) {
-        User foundUser = userRepository.findByUserName(dto.getUserName());
-        dto.setEnabled(true);
+    public UserDTO save(UserDTO dto) throws TicketingProjectException {
 
-        User obj =  mapperUtil.convert(dto,new User());
-        obj.setPassWord(passwordEncoder.encode(obj.getPassWord()));
-        userRepository.save(obj);
+        User foundUser = userRepository.findByUserName(dto.getUserName());
+
+        if(foundUser!=null){
+            throw new TicketingProjectException("User already exists");
+        }
+
+        User user =  mapperUtil.convert(dto,new User());
+        user.setPassWord(passwordEncoder.encode(user.getPassWord()));
+
+        User save = userRepository.save(user);
+
+        return mapperUtil.convert(save,new UserDTO());
+
     }
 
     @Override
-    public UserDTO update(UserDTO dto) {
+    public UserDTO update(UserDTO dto) throws TicketingProjectException {
 
         //Find current user
         User user = userRepository.findByUserName(dto.getUserName());
+
+        if(user == null){
+            throw new TicketingProjectException("User Does Not Exists");
+        }
         //Map update user dto to entity object
         User convertedUser = mapperUtil.convert(dto,new User());
         convertedUser.setPassWord(passwordEncoder.encode(convertedUser.getPassWord()));
@@ -122,5 +134,14 @@ public class UserServiceImpl implements UserService {
             default:
                 return true;
         }
+    }
+
+    @Override
+    public UserDTO confirm(User user) {
+
+        user.setEnabled(true);
+        User confirmedUser = userRepository.save(user);
+
+        return mapperUtil.convert(confirmedUser,new UserDTO());
     }
 }

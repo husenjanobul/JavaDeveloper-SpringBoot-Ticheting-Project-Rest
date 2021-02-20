@@ -1,4 +1,4 @@
-package com.company.exceprtion;
+package com.company.exception;
 
 public class TicketingProjectException extends Exception {
 
