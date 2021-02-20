@@ -3,10 +3,10 @@ package com.company.implementation;
 import com.company.dto.UserDTO;
 import com.company.entity.User;
 import com.company.entity.common.UserPrincipal;
-import com.company.mapper.MapperUtil;
 import com.company.repository.UserRepository;
 import com.company.service.SecurityService;
 import com.company.service.UserService;
+import com.company.util.MapperUtil;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
+
 
     private UserService userService;
     private MapperUtil mapperUtil;
@@ -38,12 +39,13 @@ public class SecurityServiceImpl implements SecurityService {
         }
 
         return new org.springframework.security.core.userdetails.User(user.getId().toString(),user.getPassWord(),listAuthorities(user));
+
     }
 
     @Override
     public User loadUser(String param) {
-        UserDTO user = userService.findByUserName(param);
-        return mapperUtil.convert(user, new User());
+        UserDTO user =  userService.findByUserName(param);
+        return mapperUtil.convert(user,new User());
     }
 
     private Collection<? extends GrantedAuthority> listAuthorities(UserDTO user){
@@ -53,6 +55,7 @@ public class SecurityServiceImpl implements SecurityService {
         authorityList.add(authority);
 
         return authorityList;
-    }
 
+
+    }
 }

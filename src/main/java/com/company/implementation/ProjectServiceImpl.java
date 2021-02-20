@@ -1,14 +1,11 @@
 package com.company.implementation;
 
 import com.company.dto.ProjectDTO;
-import com.company.dto.UserDTO;
 import com.company.entity.Project;
 import com.company.entity.User;
 import com.company.enums.Status;
 import com.company.exception.TicketingProjectException;
-import com.company.mapper.MapperUtil;
-import com.company.mapper.ProjectMapper;
-import com.company.mapper.UserMapper;
+import com.company.util.MapperUtil;
 import com.company.repository.ProjectRepository;
 import com.company.repository.UserRepository;
 import com.company.service.ProjectService;

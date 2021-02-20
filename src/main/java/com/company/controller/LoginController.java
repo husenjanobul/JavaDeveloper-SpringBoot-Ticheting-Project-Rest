@@ -1,25 +1,21 @@
 package com.company.controller;
 
 import com.company.annotation.DefaultExceptionMessage;
-import com.company.dto.MailDTO;
 import com.company.dto.UserDTO;
 import com.company.entity.ConfirmationToken;
 import com.company.entity.ResponseWrapper;
 import com.company.entity.User;
 import com.company.entity.common.AuthenticationRequest;
 import com.company.exception.TicketingProjectException;
-import com.company.mapper.MapperUtil;
+import com.company.util.MapperUtil;
 import com.company.service.ConfirmationTokenService;
 import com.company.service.UserService;
 import com.company.util.JWTUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -2,25 +2,21 @@ package com.company.controller;
 
 import com.company.annotation.DefaultExceptionMessage;
 import com.company.dto.MailDTO;
-import com.company.dto.RoleDTO;
 import com.company.dto.UserDTO;
 import com.company.entity.ConfirmationToken;
 import com.company.entity.ResponseWrapper;
 import com.company.entity.User;
 import com.company.exception.TicketingProjectException;
-import com.company.mapper.MapperUtil;
+import com.company.util.MapperUtil;
 import com.company.service.ConfirmationTokenService;
 import com.company.service.RoleService;
 import com.company.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -99,43 +95,6 @@ public class UserController {
         List<UserDTO> userList = userService.listAllByRole(role);
         return ResponseEntity.ok(new ResponseWrapper("Successfully read users by role",userList));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private MailDTO createEmail(UserDTO userDTO){
